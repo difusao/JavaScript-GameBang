@@ -1,4 +1,4 @@
-# GameBangJS
+# Game Bang JS
 Game Bang JS
 
 #Base
