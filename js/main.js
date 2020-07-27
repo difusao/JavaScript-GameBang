@@ -61,12 +61,10 @@ function Bullet() {
     this.y = bull_start.y;
     this.dx = Math.cos(bull_start.angle) * Math.floor(bull_start.power / 4);
     this.dy = Math.sin(bull_start.angle) * Math.floor(bull_start.power / 4);
-    this.color = "#ffffff";
     this.radius = 20;
     this.velocity = 5;
     this.gravity = 0.3;
 
-    this.color = "#ffffff";
     this.radius = 15;
     this.velocity = 5;
     this.gravity = 0.3;
@@ -74,7 +72,7 @@ function Bullet() {
     this.draw = function () {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-        ctx.fillStyle = this.color;
+        ctx.fillStyle = "#ffffff";
         ctx.fill();
         ctx.closePath();
     }
@@ -104,183 +102,204 @@ function Bullet() {
 function Gun() {
     this.x = 0;
     this.y = 0;
-    this.kx = 0;
-    this.ky = 0;
-    this.sx = 20;
-    this.sy = canvas.height;
-    this.gx = 0;
-    this.gy = 0;
-    this.length = 50;
-    this.color = "#ffffff";
+    let sx = 20;
+    let sy = canvas.height;
+    let gx = 0;
+    let gy = 0;
 
     this.draw = function () {
-        // arc
-        for (let i = 0; i < 16; i++) {
-            ctx.beginPath();
-            ctx.save();
-            ctx.strokeStyle = "#808080";
-            ctx.fillStyle = "#ffffff";
-            ctx.lineWidth = 2;
 
-            ctx.arc(cx, cy, 220, 1.5 * Math.PI, 0, false);
+        const arc = {
+            draw: function () {
+                for (let i = 0; i < 16; i++) {
+                    ctx.beginPath();
+                    ctx.save();
 
-            ctx.setTransform(1, 0, 0, 1, cx, cy);
-            ctx.rotate(-i / 9.53);
+                    ctx.strokeStyle = "#808080";
+                    ctx.fillStyle = "#ffffff";
+                    ctx.lineWidth = 2;
 
-            ctx.fillRect(225, 0, 10, 3);
+                    ctx.arc(cx, cy, 220, 1.5 * Math.PI, 0, false);
 
-            ctx.stroke();
-            ctx.restore();
-            ctx.closePath();
-        }
+                    ctx.setTransform(1, 0, 0, 1, cx, cy);
+                    ctx.rotate(-i / 9.53);
 
-        // Showgun
-        ctx.beginPath();
-        ctx.save();
+                    ctx.fillRect(225, 0, 10, 3);
 
-        ctx.fillStyle = "#808080";
-        ctx.strokeStyle = "#000000";
-        ctx.lineWidth = 2;
+                    ctx.stroke();
 
-        // arrow
-        ctx.moveTo(cx, cy);
-        ctx.lineTo(this.gx, this.gy);
+                    ctx.restore();
+                    ctx.closePath();
+                }
+            }
+        };
 
-        ctx.setTransform(1, 0, 0, 1, 50, canvas.height - 50);
-        ctx.rotate(bull_start.angle - 1.57);
+        const shotgun = {
+            draw: function () {
+                ctx.beginPath();
+                ctx.save();
 
-        ctx.rect(-15, 0, 30, 35);
-        ctx.arc(0, 0, 15, 1 * Math.PI, 0);
+                ctx.fillStyle = "#808080";
+                ctx.strokeStyle = "#000000";
+                ctx.lineWidth = 2;
 
-        ctx.stroke();
-        ctx.fill();
+                // arrow
+                ctx.moveTo(cx, cy);
+                ctx.lineTo(gx, gy);
 
-        // Brilho linha
-        ctx.beginPath();
-        ctx.fillStyle = "#c0c0c0";
-        ctx.fillRect(10, 1, 2, 32);
-        ctx.closePath();
+                ctx.setTransform(1, 0, 0, 1, 50, canvas.height - 50);
+                ctx.rotate(bull_start.angle - 1.57);
 
-        // Brilho curva
-        ctx.beginPath();
-        ctx.strokeStyle = "#c0c0c0";
-        ctx.arc(-2, 1, 13, 1.7 * Math.PI, 0);
-        ctx.stroke();
-        ctx.closePath();
+                ctx.rect(-15, 0, 30, 35);
+                ctx.arc(0, 0, 15, 1 * Math.PI, 0);
 
-        // Shadow
-        ctx.beginPath();
-        ctx.fillStyle = "#000000";
-        ctx.fillRect(-13, 0, 2, 32);
-        ctx.closePath();
+                ctx.stroke();
+                ctx.fill();
 
-        // Display
-        ctx.beginPath();
-        ctx.fillStyle = "#000000";
-        ctx.fillRect(-8, -2, 14, 32);
-        ctx.closePath();
+                // Brilho linha
+                ctx.beginPath();
+                ctx.fillStyle = "#c0c0c0";
+                ctx.fillRect(10, 1, 2, 32);
+                ctx.closePath();
 
-        // Power
-        ctx.beginPath();
-        if (bull_start.power < 1) {
+                // Brilho curva
+                ctx.beginPath();
+                ctx.strokeStyle = "#c0c0c0";
+                ctx.arc(-2, 1, 13, 1.7 * Math.PI, 0);
+                ctx.stroke();
+                ctx.closePath();
 
-        } else if (bull_start.power < 20) {
-            ctx.fillStyle = "#00ff00";
-            ctx.fillRect(-6, 0, 10, 3);
-        } else if (bull_start.power < 40) {
-            ctx.fillStyle = "#00ff00";
-            ctx.fillRect(-6, 0, 10, 3);
-            ctx.fillRect(-6, 5, 10, 3);
-        } else if (bull_start.power < 60) {
-            ctx.fillStyle = "#00ff00";
-            ctx.fillRect(-6, 0, 10, 3);
-            ctx.fillRect(-6, 5, 10, 3);
-            ctx.fillStyle = "#ffff00";
-            ctx.fillRect(-6, 10, 10, 3);
-        } else if (bull_start.power < 80) {
-            ctx.fillStyle = "#00ff00";
-            ctx.fillRect(-6, 0, 10, 3);
-            ctx.fillRect(-6, 5, 10, 3);
-            ctx.fillStyle = "#ffff00";
-            ctx.fillRect(-6, 10, 10, 3);
-            ctx.fillRect(-6, 15, 10, 3);
-        } else if (bull_start.power < 90) {
-            ctx.fillStyle = "#00ff00";
-            ctx.fillRect(-6, 0, 10, 3);
-            ctx.fillRect(-6, 5, 10, 3);
-            ctx.fillStyle = "#ffff00";
-            ctx.fillRect(-6, 10, 10, 3);
-            ctx.fillRect(-6, 15, 10, 3);
-            ctx.fillStyle = "#ff0000";
-            ctx.fillRect(-6, 20, 10, 3);
-        } else if (bull_start.power >= 90) {
-            ctx.fillStyle = "#00ff00";
-            ctx.fillRect(-6, 0, 10, 3);
-            ctx.fillRect(-6, 5, 10, 3);
-            ctx.fillStyle = "#ffff00";
-            ctx.fillRect(-6, 10, 10, 3);
-            ctx.fillRect(-6, 15, 10, 3);
-            ctx.fillStyle = "#ff0000";
-            ctx.fillRect(-6, 20, 10, 3);
-            ctx.fillRect(-6, 25, 10, 3);
-        }
+                // Shadow
+                ctx.beginPath();
+                ctx.fillStyle = "#000000";
+                ctx.fillRect(-13, 0, 2, 32);
+                ctx.closePath();
 
-        ctx.restore();
-        ctx.closePath();
+                // Display
+                ctx.beginPath();
+                ctx.fillStyle = "#000000";
+                ctx.fillRect(-8, -2, 14, 32);
+                ctx.closePath();
 
-        // base
-        ctx.beginPath();
-        ctx.strokeStyle = "#000000";
-        ctx.fillStyle = "#000000";
-        ctx.arc(this.sx + 25, canvas.height - 25, 15, 0, 2 * Math.PI);
-        ctx.fill();
-        ctx.stroke();
-        ctx.closePath();
+                // Power
+                ctx.beginPath();
+                if (bull_start.power < 1) {
 
-        ctx.beginPath();
-        ctx.strokeStyle = "#c0c0c0";
-        ctx.fillStyle = "#c0c0c0";
-        ctx.arc(this.sx + 25, canvas.height - 25, 8, 0, 2 * Math.PI);
-        ctx.stroke();
-        ctx.fill();
-        ctx.closePath();
+                } else if (bull_start.power < 20) {
+                    ctx.fillStyle = "#00ff00";
+                    ctx.fillRect(-6, 0, 10, 3);
+                } else if (bull_start.power < 40) {
+                    ctx.fillStyle = "#00ff00";
+                    ctx.fillRect(-6, 0, 10, 3);
+                    ctx.fillRect(-6, 5, 10, 3);
+                } else if (bull_start.power < 60) {
+                    ctx.fillStyle = "#00ff00";
+                    ctx.fillRect(-6, 0, 10, 3);
+                    ctx.fillRect(-6, 5, 10, 3);
+                    ctx.fillStyle = "#ffff00";
+                    ctx.fillRect(-6, 10, 10, 3);
+                } else if (bull_start.power < 80) {
+                    ctx.fillStyle = "#00ff00";
+                    ctx.fillRect(-6, 0, 10, 3);
+                    ctx.fillRect(-6, 5, 10, 3);
+                    ctx.fillStyle = "#ffff00";
+                    ctx.fillRect(-6, 10, 10, 3);
+                    ctx.fillRect(-6, 15, 10, 3);
+                } else if (bull_start.power < 90) {
+                    ctx.fillStyle = "#00ff00";
+                    ctx.fillRect(-6, 0, 10, 3);
+                    ctx.fillRect(-6, 5, 10, 3);
+                    ctx.fillStyle = "#ffff00";
+                    ctx.fillRect(-6, 10, 10, 3);
+                    ctx.fillRect(-6, 15, 10, 3);
+                    ctx.fillStyle = "#ff0000";
+                    ctx.fillRect(-6, 20, 10, 3);
+                } else if (bull_start.power >= 90) {
+                    ctx.fillStyle = "#00ff00";
+                    ctx.fillRect(-6, 0, 10, 3);
+                    ctx.fillRect(-6, 5, 10, 3);
+                    ctx.fillStyle = "#ffff00";
+                    ctx.fillRect(-6, 10, 10, 3);
+                    ctx.fillRect(-6, 15, 10, 3);
+                    ctx.fillStyle = "#ff0000";
+                    ctx.fillRect(-6, 20, 10, 3);
+                    ctx.fillRect(-6, 25, 10, 3);
+                }
 
-        ctx.beginPath();
-        ctx.strokeStyle = "#808080";
-        //ctx.fillStyle = "#ffffff";
-        ctx.arc(this.sx + 25, canvas.height - 23, 14, 1.5 * Math.PI, -.8);
-        ctx.stroke();
-        //ctx.fill();
-        ctx.closePath();
+                ctx.restore();
+                ctx.closePath();
+            }
+        };
 
-        // ground
-        ctx.beginPath();
-        ctx.fillStyle = "#008000";
-        ctx.strokeStyle = "#000000";
-        ctx.rect(0, canvas.height - 25, canvas.width, 50);
-        ctx.stroke();
-        ctx.fill();
-        ctx.closePath();
+        const basegun = {
+            draw: function () {
+                // tire
+                ctx.beginPath();
+                ctx.strokeStyle = "#000000";
+                ctx.fillStyle = "#000000";
+                ctx.arc(sx + 25, canvas.height - 25, 15, 0, 2 * Math.PI);
+                ctx.fill();
+                ctx.stroke();
+                ctx.closePath();
 
-        ctx.beginPath();
-        ctx.font = "20px Teko";
-        ctx.fillStyle = "#ffffff";
-        ctx.fillText("Angle: " + bull_start.angle * 180 / Math.PI + " (" + bull_start.angle + ") ", 30, 30);
-        ctx.fillText("Power: " + bull_start.power, 30, 50);
-        ctx.closePath();
+                ctx.beginPath();
+                ctx.strokeStyle = "#c0c0c0";
+                ctx.fillStyle = "#c0c0c0";
+                ctx.arc(sx + 25, canvas.height - 25, 8, 0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.fill();
+                ctx.closePath();
+
+                ctx.beginPath();
+                ctx.strokeStyle = "#808080";
+                ctx.arc(sx + 25, canvas.height - 23, 14, 1.5 * Math.PI, -.8);
+                ctx.stroke();
+                ctx.closePath();
+
+            },
+        };
+
+        const ground = {
+            draw: function () {
+                ctx.beginPath();
+                ctx.fillStyle = "#008000";
+                ctx.strokeStyle = "#000000";
+                ctx.rect(0, canvas.height - 25, canvas.width, 50);
+                ctx.stroke();
+                ctx.fill();
+                ctx.closePath();
+            }
+        };
+
+        const info = {
+            draw: function () {
+                ctx.beginPath();
+                ctx.font = "20px Teko";
+                ctx.fillStyle = "#ffffff";
+                ctx.fillText("Angle: " + bull_start.angle * 180 / Math.PI + " (" + bull_start.angle + ") ", 30, 30);
+                ctx.fillText("Power: " + bull_start.power, 30, 50);
+                ctx.closePath();
+            },
+        };
+
+        arc.draw();
+        shotgun.draw();
+        basegun.draw();
+        ground.draw();
+        info.draw();
     }
 
     this.update = function () {
         bull_start.angle = Math.atan2(mouse.y - cy, mouse.x - cx);
 
         if (bull_start.angle > 0) bull_start.angle = 0;
-        if (bull_start.angle < -1.57) bull_start.angle = -1.57;
+        if (bull_start.angle < -1.5707963267948966) bull_start.angle = -1.5707963267948966;
 
         this.x = 50 + Math.cos(bull_start.angle) * 40;
         this.y = canvas.height - 50 + Math.sin(bull_start.angle) * 40;
 
-        this.gx = cx + Math.cos(bull_start.angle) * 250;
-        this.gy = cy + Math.sin(bull_start.angle) * 250;
+        gx = cx + Math.cos(bull_start.angle) * 250;
+        gy = cy + Math.sin(bull_start.angle) * 250;
 
         bull_start.x = this.x;
         bull_start.y = this.y;
@@ -311,9 +330,8 @@ function loop() {
     gun.update();
     pnl.update();
 
-    for (var i = 0; i < bullets.length; i++) {
+    for (var i = 0; i < bullets.length; i++)
         bullets[i].update(bullets);
-    }
 }
 
 function start() {
