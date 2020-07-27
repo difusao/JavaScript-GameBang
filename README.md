@@ -1,7 +1,7 @@
 # Game Bang JS
 Game Bang JS
 
-![image1.png](https://github.com/GameBangJS/blob/master/images/img1.png)
+![image1.png](https://github.com/difusao/GameBangJS/blob/master/images/img1.png)
 
 #Base
 https://www.adammarcwilliams.co.uk/animating-javascript-trigonometry/
