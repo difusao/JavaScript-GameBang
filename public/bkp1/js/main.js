@@ -21,8 +21,12 @@ var bull_start = {
     x: cx,
     y: cy,
     angle: 0,
-    power: 50,
+    power: 80,
 };
+
+var mousePos;
+var mouseDown = false;
+var mouseUp = false;
 
 canvas.addEventListener("keydown", function (evt) {
     if (evt.key == "ArrowUp" && bull_start.power < 100) {
@@ -41,11 +45,19 @@ window.addEventListener('resize', function () {
 canvas.addEventListener('mousemove', function (event) {
     mouse.x = event.clientX;
     mouse.y = event.clientY;
-})
+}, false);
 
 canvas.addEventListener('click', function (evt) {
     bullets.push(new Bullet());
-})
+});
+
+function getMousePos(canvas, evt) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+        x: evt.clientX - rect.left,
+        y: evt.clientY - rect.top
+    };
+}
 
 function Panel() {
     this.draw = function () {
@@ -56,7 +68,23 @@ function Panel() {
     }
 }
 
+function Target() {
+    this.draw = function () {
+        ctx.beginPath();
+
+        ctx.closePath();
+    }
+
+    this.update = function () {
+        ctx.beginPath();
+
+        ctx.closePath();
+    }
+}
+
 function Bullet() {
+    this.tx = 0;
+    this.ty = 0;
     this.x = bull_start.x;
     this.y = bull_start.y;
     this.dx = Math.cos(bull_start.angle) * Math.floor(bull_start.power / 4);
@@ -68,17 +96,27 @@ function Bullet() {
     this.radius = 15;
     this.velocity = 5;
     this.gravity = 0.3;
+    this.angle = 0;
 
     this.draw = function () {
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+        ctx.save();
+
         ctx.fillStyle = "#ffffff";
+        ctx.strokeStyle = "#000000";
+        ctx.lineWidth = 10;
+
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+
+        ctx.stroke();
         ctx.fill();
+        ctx.restore();
         ctx.closePath();
     }
 
     this.update = function (bullets) {
         var bullet_index = 0;
+        this.angle = Math.atan2(this.x - cy, this.y - cx);
 
         for (var i = 0; i < bullets.length; i++) {
             if (this === bullets[i]) {
@@ -91,9 +129,8 @@ function Bullet() {
         this.y += this.dy;
         this.dy += this.gravity;
 
-        if (this.x > canvas.width || this.y > canvas.height - 40) {
+        if (this.x > canvas.width || this.y > canvas.height - 40)
             bullets.splice(bullet_index, 1);
-        }
 
         this.draw();
     }
